@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
+
 {
     public function login(Request $request)
     {
@@ -48,5 +49,6 @@ class UserController extends Controller
 
         return redirect('/');
     }
+
 }
 
