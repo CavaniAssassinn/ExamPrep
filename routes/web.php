@@ -5,6 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
+Route::get('/',function(){
+    return view('home');
+});
+
+Route::post('/register',[UserController::class,'register']);
+
+
+
 Route::get('/', function () {
     $posts = [];
     if (auth()->check()) {
@@ -23,3 +31,8 @@ Route::get('/edit-post/{post}', [PostController::class, 'showEditScreen']);
 Route::put('/edit-post/{post}', [PostController::class, 'actuallyUpdatePost']);
 Route::delete('/delete-post/{post}', [PostController::class, 'deletePost']);
 
+Route::middleware('auth')->group(function(){
+    Route::get('/profile',[UserController::class,'showProfile'])->middleware('auth');
+    Route::post('/profile',[UserController::class,'showProfile']);
+}
+);
