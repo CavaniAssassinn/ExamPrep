@@ -5,9 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
+   
     public function up()
     {
         Schema::create('exams', function (Blueprint $table) {
@@ -15,15 +13,11 @@ return new class extends Migration {
             $table->string('title');
             $table->string('subject');
             $table->dateTime('exam_date');
-            $table->text('eligible_roles')->nullable(); // e.g., "student,lecturer"
+            $table->text('eligible_roles')->nullable(); 
             $table->timestamps();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('exams');

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     /**
-     * Run the migrations.
+     * It runs the migrations.
      */
     public function up()
     {
@@ -15,14 +15,14 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('exam_id')->constrained()->onDelete('cascade');
             $table->string('subject');
-            $table->integer('marks'); // percentage or raw score
+            $table->integer('marks'); 
             $table->timestamps();
         });
     }
 
 
     /**
-     * Reverse the migrations.
+     * This will reverse the migrations.
      */
     public function down(): void
     {

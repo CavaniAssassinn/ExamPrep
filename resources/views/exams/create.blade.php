@@ -1,5 +1,5 @@
 <h1>Create New Exam</h1>
-
+// creating a form to create a new exam
 <form method="POST" action="/exams">
     @csrf
     <label>Title:</label>

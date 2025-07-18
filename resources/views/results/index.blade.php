@@ -9,5 +9,5 @@
             <td>{{ $result->subject }}</td>
             <td>{{ $result->marks }}%</td>
         </tr>
-    @endforeach
+    @endforeach 
 </table>

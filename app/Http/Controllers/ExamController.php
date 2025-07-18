@@ -24,6 +24,6 @@ class ExamController extends Controller
         $data['eligible_roles'] = implode(',', $data['eligible_roles']);
         Exam::create($data);
 
-        return redirect('/dashboard')->with('success', 'Exam created.');
+        return redirect('/dashboard')->with('success', 'Exam was created.');
     }
 }
