@@ -13,11 +13,19 @@ class ExamController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        if (auth()->user()->user_role !== 'lecturer') {
+            abort(403, 'Unauthorized');
+        }
+
         return view('exams.create');
     }
 
     public function store(Request $request)
     {
+        if (auth()->user()->user_role !== 'lecturer') {
+            abort(403, 'Unauthorized');
+        }
+
         if (auth()->user()->user_role !== 'lecturer') {
             abort(403, 'Unauthorized');
         }
@@ -35,21 +43,4 @@ class ExamController extends Controller
         return redirect('/dashboard')->with('success', 'Exam was created.');
     }
 
-<<<<<<< Updated upstream
-    public function index()
-    {
-        $exams = \App\Models\Exam::all();
-        return view('dashboard.manage_exams', compact('exams'));
-    }
-
-    public function destroy($id)
-    {
-        $exam = \App\Models\Exam::findOrFail($id);
-        $exam->delete();
-
-        return redirect()->back()->with('success', 'Exam deleted successfully.');
-    }
-
-=======
->>>>>>> Stashed changes
 }

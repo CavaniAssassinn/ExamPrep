@@ -12,19 +12,6 @@ class DashboardController extends Controller
     public function showDashboard()
     {
         $user = auth()->user();
-<<<<<<< Updated upstream
-
-        // Guest view (no user logged in)
-        if (!$user) {
-            $upcomingExams = Exam::where('exam_date', '>', now())->get();
-            return view('dashboard.guest', [
-                'upcomingExams' => $upcomingExams,
-            ]);
-        }
-
-        // Lecturer dashboard
-        if ($user->user_role === 'lecturer') {
-=======
 
         if (!$user) {
             // For guests: show public (upcoming) exams only
@@ -36,38 +23,21 @@ class DashboardController extends Controller
         }
 
         if ($user->role === 'lecturer') {
->>>>>>> Stashed changes
             $examCount = Exam::count();
             $studentCount = \App\Models\User::where('user_role', 'student')->count();
 
-<<<<<<< Updated upstream
-            return view('dashboard.lecturer', [
-                'examCount' => $examCount,
-                'studentCount' => $studentCount,
-            ]);
-        }
-
-        // Student dashboard
-=======
             return view('dashboard.lecturer', compact('examCount', 'studentCount'));
         }
 
         // Student
->>>>>>> Stashed changes
         $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
             ->where('exam_date', '>', now())
             ->get();
 
         $results = Result::where('user_id', $user->id)->get();
+        $results = Result::where('user_id', $user->id)->get();
 
-<<<<<<< Updated upstream
-        return view('dashboard.student', [
-            'upcomingExams' => $upcomingExams,
-            'results' => $results,
-        ]);
-=======
         return view('dashboard.student', compact('upcomingExams', 'results'));
->>>>>>> Stashed changes
     }
 
 
