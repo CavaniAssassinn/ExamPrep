@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class StudentController extends Controller
+class AKNStudentController extends Controller
 {
     // Show all students
     public function index()

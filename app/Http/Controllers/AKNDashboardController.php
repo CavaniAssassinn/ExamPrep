@@ -8,7 +8,7 @@ use App\Models\Exam;
 use App\Models\Result;
 use App\Models\User;
 
-class DashboardController extends Controller
+class AKNDashboardController extends Controller
 {
     public function showDashboard()
     {

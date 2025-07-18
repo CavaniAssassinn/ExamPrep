@@ -7,7 +7,7 @@ use App\Models\Exam;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
-class QuestionController extends Controller
+class AKNQuestionController extends Controller
 {
     public function create(Exam $exam)
     {

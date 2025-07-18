@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class AdminUserController extends Controller
+class AKNAdminUserController extends Controller
 {
     public function index()
     {

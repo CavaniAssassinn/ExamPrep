@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 
-class ExamController extends Controller
+class AKNExamController extends Controller
 {
     // 📄 Show the Manage Exams page
     public function index()

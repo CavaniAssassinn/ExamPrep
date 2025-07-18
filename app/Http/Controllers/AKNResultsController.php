@@ -5,7 +5,7 @@ use App\Models\Result;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class ResultsController extends Controller
+class AKNResultsController extends Controller
 {
     public function create()
     {

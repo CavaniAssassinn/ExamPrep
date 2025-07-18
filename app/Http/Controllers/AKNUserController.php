@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class AKNUserController extends Controller
 {
     public function register(Request $request)
     {
