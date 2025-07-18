@@ -15,7 +15,6 @@ Route::get('/', [DashboardController::class, 'showDashboard'])->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
     Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
-
     Route::post('/login', [UserController::class, 'login'])->name('login.attempt');
     Route::post('/register', [UserController::class, 'register'])->name('register.attempt');
 });
@@ -36,10 +35,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/edit-post/{post}', [PostController::class, 'actuallyUpdatePost'])->name('post.update');
     Route::delete('/delete-post/{post}', [PostController::class, 'deletePost'])->name('post.delete');
 
-    // 🎓 Exams — for Lecturers Only
-    Route::middleware('can:create,App\Models\Exam')->group(function () {
-        Route::get('/exams/create', [ExamController::class, 'create'])->name('exams.create');
-        Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');
+    // 📘 Student Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+
+    // 👨‍🏫 Lecturer Redirect Dashboard
+    Route::get('/lecturer-dashboard', function () {
+        return view('dashboard.lecturer');
+    })->name('lecturer.dashboard');
+
+    // 📚 Exam Management (Lecturers Only)
+    Route::prefix('manage')->middleware('can:create,App\Models\Exam')->group(function () {
+        Route::get('/exams', [ExamController::class, 'index'])->name('exams.index');         // Manage Exams Page
+        Route::get('/exams/create', [ExamController::class, 'create'])->name('exams.create'); // Create Form
+        Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');         // Save Exam
+        Route::delete('/exams/{id}', [ExamController::class, 'destroy'])->name('exams.destroy');
     });
 
     // 📊 Results — for Lecturers Only
@@ -51,27 +60,17 @@ Route::middleware('auth')->group(function () {
     // 👨‍🎓 Manage Students (Lecturer Only)
     Route::prefix('manage')->name('students.')->group(function () {
         Route::get('/students', [StudentController::class, 'index'])->name('index');
-        Route::get('/students/create', [StudentController::class, 'create'])->name('create'); // 👈 Add form to create student
-        Route::post('/students', [StudentController::class, 'store'])->name('store');         // 👈 Handle creation
+        Route::get('/students/create', [StudentController::class, 'create'])->name('create');
+        Route::post('/students', [StudentController::class, 'store'])->name('store');
         Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('destroy');
     });
 });
-
-// 🧑‍🏫 Lecturer Redirect Dashboard
-Route::get('/lecturer-dashboard', function () {
-    return view('dashboard.lecturer');
-})->middleware('auth')->name('lecturer.dashboard');
-
-// 📘 Student Dashboard
-Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middleware('auth')->name('dashboard');
 
 // 🔎 Public Exam Access (Guests or Students)
 Route::get('/exams/upcoming', [DashboardController::class, 'upcomingExams'])->name('exams.upcoming');
 Route::get('/results', [DashboardController::class, 'results'])->name('results');
 Route::get('/exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
 
-// 🔒 Authenticated Exam Management
-Route::middleware('auth')->group(function () {
-    Route::get('/manage/exams', [ExamController::class, 'index'])->name('exams.index');
-    Route::delete('/exams/{id}', [ExamController::class, 'destroy'])->name('exams.destroy');
-});
+Route::get('/manage/exams/create', [ExamController::class, 'create'])->name('exams.create');
+Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');
+

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exam;
 use App\Models\Result;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -13,40 +14,43 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        // 🟡 Guest View
         if (!$user) {
-            // For guests: show public (upcoming) exams only
             $upcomingExams = Exam::where('exam_date', '>', now())->get();
-
             return view('dashboard.guest', [
                 'upcomingExams' => $upcomingExams,
             ]);
         }
 
-        if ($user->role === 'lecturer') {
+        // 🟢 Lecturer View
+        if ($user->user_role === 'lecturer') {
             $examCount = Exam::count();
-            $studentCount = \App\Models\User::where('user_role', 'student')->count();
+            $studentCount = User::where('user_role', 'student')->count();
 
-            return view('dashboard.lecturer', compact('examCount', 'studentCount'));
+            return view('dashboard.lecturer', [
+                'examCount' => $examCount,
+                'studentCount' => $studentCount,
+            ]);
         }
 
-        // Student
+        // 🔵 Student View
         $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
             ->where('exam_date', '>', now())
             ->get();
 
         $results = Result::where('user_id', $user->id)->get();
-        $results = Result::where('user_id', $user->id)->get();
 
-        return view('dashboard.student', compact('upcomingExams', 'results'));
+        return view('dashboard.student', [
+            'upcomingExams' => $upcomingExams,
+            'results' => $results,
+        ]);
     }
-
-
 
     public function upcomingExams()
     {
         $user = Auth::user();
 
-        $exams = Exam::where('eligible_roles', 'like', "%{$user->role}%")
+        $exams = Exam::where('eligible_roles', 'like', "%{$user->user_role}%")
             ->where('exam_date', '>', now())
             ->get();
 

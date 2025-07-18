@@ -7,40 +7,44 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+    // 📄 Show the Manage Exams page
+    public function index()
+    {
+        $exams = Exam::all(); // or paginate if needed
+        return view('dashboard.manage_exams', compact('exams'));
+    }
+
+    // 📋 Show Create Exam form
     public function create()
     {
-        if (auth()->user()->user_role !== 'lecturer') {
-            abort(403, 'Unauthorized');
-        }
-
-        if (auth()->user()->user_role !== 'lecturer') {
-            abort(403, 'Unauthorized');
-        }
-
         return view('exams.create');
     }
 
+    // 💾 Store new exam
     public function store(Request $request)
     {
-        if (auth()->user()->user_role !== 'lecturer') {
-            abort(403, 'Unauthorized');
-        }
-
-        if (auth()->user()->user_role !== 'lecturer') {
-            abort(403, 'Unauthorized');
-        }
-
-        $data = $request->validate([
-            'title' => 'required',
-            'subject' => 'required',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
             'exam_date' => 'required|date',
             'eligible_roles' => 'required|array',
+            'eligible_roles.*' => 'in:student,lecturer',
         ]);
 
-        $data['eligible_roles'] = implode(',', $data['eligible_roles']);
-        Exam::create($data);
+        // Convert eligible_roles array to comma-separated string
+        $validated['eligible_roles'] = implode(',', $validated['eligible_roles']);
 
-        return redirect('/dashboard')->with('success', 'Exam was created.');
+        Exam::create($validated);
+
+        return redirect()->route('exams.index')->with('success', 'Exam created successfully!');
     }
 
+    // ❌ Delete an exam
+    public function destroy($id)
+    {
+        $exam = Exam::findOrFail($id);
+        $exam->delete();
+
+        return back()->with('success', 'Exam deleted successfully.');
+    }
 }
