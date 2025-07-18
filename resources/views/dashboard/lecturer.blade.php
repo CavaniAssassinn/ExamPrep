@@ -39,7 +39,8 @@
                 📚 Manage Exams
             </a>
 
-            <a href="/results/create" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded">
+            <a href="{{ route('results.create') }}"
+                class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded">
                 📥 Upload Result
             </a>
         </div>

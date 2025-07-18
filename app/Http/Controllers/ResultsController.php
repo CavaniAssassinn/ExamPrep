@@ -10,19 +10,25 @@ class ResultsController extends Controller
     public function create()
     {
         $students = User::where('user_role', 'student')->get();
-        return view('results.create', compact('students'));
+        $exams = \App\Models\Exam::all();
+
+        return view('dashboard.upload_results', compact('students', 'exams'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'exam_id' => 'required|exists:exams,id',
             'subject' => 'required|string|max:255',
-            'marks' => 'required|integer|min:0|max:100',
+            'marks' => 'required|numeric|min:0|max:100',
         ]);
 
-        Result::create($data);
+        Result::create($validated);
 
-        return redirect('/dashboard')->with('success', 'Result uploaded successfully.');
+        return redirect()->back()->with('success', 'Result uploaded successfully!');
     }
+
+
+
 }

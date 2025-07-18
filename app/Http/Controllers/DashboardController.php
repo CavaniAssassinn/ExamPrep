@@ -14,37 +14,30 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // 🟡 Guest View
+        // Guest
         if (!$user) {
             $upcomingExams = Exam::where('exam_date', '>', now())->get();
-            return view('dashboard.guest', [
-                'upcomingExams' => $upcomingExams,
-            ]);
+            return view('dashboard.guest', ['upcomingExams' => $upcomingExams]);
         }
 
-        // 🟢 Lecturer View
+        // Lecturer
         if ($user->user_role === 'lecturer') {
             $examCount = Exam::count();
             $studentCount = User::where('user_role', 'student')->count();
 
-            return view('dashboard.lecturer', [
-                'examCount' => $examCount,
-                'studentCount' => $studentCount,
-            ]);
+            return view('dashboard.lecturer', compact('examCount', 'studentCount'));
         }
 
-        // 🔵 Student View
+        // Student
         $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
             ->where('exam_date', '>', now())
             ->get();
 
         $results = Result::where('user_id', $user->id)->get();
 
-        return view('dashboard.student', [
-            'upcomingExams' => $upcomingExams,
-            'results' => $results,
-        ]);
+        return view('dashboard.student', compact('upcomingExams', 'results'));
     }
+
 
     public function upcomingExams()
     {

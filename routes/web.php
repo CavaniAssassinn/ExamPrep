@@ -39,9 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
     // 👨‍🏫 Lecturer Redirect Dashboard
-    Route::get('/lecturer-dashboard', function () {
-        return view('dashboard.lecturer');
-    })->name('lecturer.dashboard');
+    Route::get('/lecturer-dashboard', [DashboardController::class, 'showDashboard'])->name('lecturer.dashboard');
+
 
     // 📚 Exam Management (Lecturers Only)
     Route::prefix('manage')->middleware('can:create,App\Models\Exam')->group(function () {
@@ -73,4 +72,14 @@ Route::get('/exams/{exam}', [ExamController::class, 'show'])->name('exams.show')
 
 Route::get('/manage/exams/create', [ExamController::class, 'create'])->name('exams.create');
 Route::post('/exams', [ExamController::class, 'store'])->name('exams.store');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/results/create', [ResultsController::class, 'create'])->name('results.create');
+    Route::post('/results', [ResultsController::class, 'store'])->name('results.store');
+});
+
+Route::get('/dashboard/upload-results', function () {
+    return view('dashboard.upload_results');
+})->middleware('auth')->name('results.upload');
+Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middleware('auth')->name('dashboard');
 
