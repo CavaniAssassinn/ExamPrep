@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'lecturer') {
-            // Lecturer dashboard: show stats or links
+            // Lecturer dashboard
             $examCount = Exam::count();
             $studentCount = \App\Models\User::where('role', 'student')->count();
 
@@ -23,11 +23,12 @@ class DashboardController extends Controller
                 'studentCount' => $studentCount
             ]);
         } else {
-            // Student dashboard
+            // Student dashboard with null-safe fallbacks
             $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
                 ->where('exam_date', '>', now())
-                ->get();
-            $results = Result::where('user_id', $user->id)->get();
+                ->get() ?? collect();
+
+            $results = Result::where('user_id', $user?->id)->get() ?? collect();
 
             return view('dashboard.student', [
                 'upcomingExams' => $upcomingExams,
