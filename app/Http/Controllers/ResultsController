@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Result;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class ResultsController extends Controller
+{
+    public function create()
+    {
+        $students = User::where('user_role', 'student')->get();
+        return view('results.create', compact('students'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'subject' => 'required|string|max:255',
+            'marks' => 'required|integer|min:0|max:100',
+        ]);
+
+        Result::create($data);
+
+        return redirect('/dashboard')->with('success', 'Result uploaded successfully.');
+    }
+}

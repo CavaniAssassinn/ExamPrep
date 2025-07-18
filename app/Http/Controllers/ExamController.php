@@ -35,4 +35,18 @@ class ExamController extends Controller
         return redirect('/dashboard')->with('success', 'Exam was created.');
     }
 
+    public function index()
+    {
+        $exams = \App\Models\Exam::all();
+        return view('dashboard.manage_exams', compact('exams'));
+    }
+
+    public function destroy($id)
+    {
+        $exam = \App\Models\Exam::findOrFail($id);
+        $exam->delete();
+
+        return redirect()->back()->with('success', 'Exam deleted successfully.');
+    }
+
 }
