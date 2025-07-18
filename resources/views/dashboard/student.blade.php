@@ -40,10 +40,24 @@
                     @endauth
                 </div>
                 <div class="space-x-3">
-                    <a href="/profile" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                        Profile
-                    </a>
-                    <button class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded">+ New Task</button>
+                    @if (auth()->user()->profile_photo)
+                        <a href="/profile" class="block">
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="Profile"
+                                class="w-10 h-10 rounded-full border-2 border-yellow-400 hover:scale-105 transition">
+                        </a>
+                    @else
+                        <a href="/profile" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                            Profile
+                        </a>
+                    @endif
+
+                    @if (auth()->user()->user_role === 'lecturer')
+                        <a href="/exams/create"
+                            class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded inline-block">
+                            + New Exam
+                        </a>
+                    @endif
+
                 </div>
             </div>
 

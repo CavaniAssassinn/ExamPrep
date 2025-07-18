@@ -11,30 +11,32 @@ class DashboardController extends Controller
 {
     public function showDashboard()
     {
-        $user = Auth::user();
+        $user = auth()->user();
+
+        if (!$user) {
+            // For guests: show public (upcoming) exams only
+            $upcomingExams = Exam::where('exam_date', '>', now())->get();
+
+            return view('dashboard.guest', [
+                'upcomingExams' => $upcomingExams,
+            ]);
+        }
 
         if ($user->role === 'lecturer') {
-            // Lecturer dashboard
             $examCount = Exam::count();
             $studentCount = \App\Models\User::where('role', 'student')->count();
 
-            return view('dashboard.lecturer', [
-                'examCount' => $examCount,
-                'studentCount' => $studentCount
-            ]);
-        } else {
-            // Student dashboard with null-safe fallbacks
-            $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
-                ->where('exam_date', '>', now())
-                ->get() ?? collect();
-
-            $results = Result::where('user_id', $user?->id)->get() ?? collect();
-
-            return view('dashboard.student', [
-                'upcomingExams' => $upcomingExams,
-                'results' => $results
-            ]);
+            return view('dashboard.lecturer', compact('examCount', 'studentCount'));
         }
+
+        // Student
+        $upcomingExams = Exam::where('eligible_roles', 'like', '%student%')
+            ->where('exam_date', '>', now())
+            ->get();
+
+        $results = Result::where('user_id', $user->id)->get();
+
+        return view('dashboard.student', compact('upcomingExams', 'results'));
     }
 
     public function upcomingExams()

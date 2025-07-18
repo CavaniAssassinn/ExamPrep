@@ -54,6 +54,7 @@ public function register(Request $request){
         $user=Auth::user();
         return view('profile',compact('user'));
     }
+<<<<<<< Updated upstream
     public function updateProfile(Request $request){
         $user=Auth::user();
 
@@ -61,12 +62,29 @@ public function register(Request $request){
             'name'=>'required',
             'email'=>'required',
             'password'=>'required',
+=======
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'user_role' => ['required', Rule::in(['student', 'lecturer'])],
+            'password' => 'nullable|min:8',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+>>>>>>> Stashed changes
         ]);
         $user->name=$validated['name'];
         $user->email=$validated['email'];
         if(!empty($validated['password'])){
             $user->password=Hash::make($validated['password']);
         }
+<<<<<<< Updated upstream
         $user->save();
         return redirect('/profile');
     
@@ -85,6 +103,19 @@ public function register(Request $request){
     $user->save();
 
 
+=======
+
+        if ($request->hasFile('profile_photo')) {
+            $image = $request->file('profile_photo');
+            $imagePath = $image->store('profile_photos', 'public');
+            $user->profile_photo = $imagePath;
+        }
+
+        $user->save();
+
+        return redirect('/profile')->with('success', 'Your profile has been updated successfully');
+    }
+>>>>>>> Stashed changes
 
 }
 

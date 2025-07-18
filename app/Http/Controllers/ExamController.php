@@ -9,11 +9,19 @@ class ExamController extends Controller
 {
     public function create()
     {
+        if (auth()->user()->user_role !== 'lecturer') {
+            abort(403, 'Unauthorized');
+        }
+
         return view('exams.create');
     }
 
     public function store(Request $request)
     {
+        if (auth()->user()->user_role !== 'lecturer') {
+            abort(403, 'Unauthorized');
+        }
+
         $data = $request->validate([
             'title' => 'required',
             'subject' => 'required',
@@ -26,4 +34,5 @@ class ExamController extends Controller
 
         return redirect('/dashboard')->with('success', 'Exam was created.');
     }
+
 }
