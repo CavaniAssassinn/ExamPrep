@@ -56,4 +56,13 @@ class User extends Authenticatable
         return $this->hasMany(Result::class);
     }
 
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'user_role' => 'student', // overridden in seeder
+            'password' => bcrypt('password123'),
+        ];
+    }
 }

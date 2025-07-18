@@ -47,4 +47,22 @@ class ExamController extends Controller
 
         return back()->with('success', 'Exam deleted successfully.');
     }
+
+    public function edit(Exam $exam)
+    {
+        return view('exams.edit', compact('exam'));
+    }
+
+    public function update(Request $request, Exam $exam)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'exam_date' => 'required|date',
+        ]);
+
+        $exam->update($validated);
+
+        return redirect()->route('exams.index')->with('success', 'Exam updated successfully!');
+    }
 }

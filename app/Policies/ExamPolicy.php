@@ -35,9 +35,9 @@ class ExamPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Exam $exam): bool
+    public function update(User $user, Exam $exam)
     {
-        return false;
+        return $user->user_role === 'lecturer';
     }
 
     /**

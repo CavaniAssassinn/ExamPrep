@@ -15,8 +15,6 @@
                 <a href="{{ route('exams.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                     + Add Exam
                 </a>
-
-
                 <a href="/dashboard" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
                     ← Back to Dashboard
                 </a>
@@ -31,12 +29,11 @@
 
         <table class="min-w-full bg-white border border-gray-300 rounded">
             <thead>
-                <tr class="bg-gray-200 text-gray-700">
-                    <th class="py-2 px-4 border-b">Title</th>
-                    <th class="py-2 px-4 border-b">Subject</th>
-                    <th class="py-2 px-4 border-b">Exam Date</th>
-                    <th class="py-2 px-4 border-b">Eligible Roles</th>
-                    <th class="py-2 px-4 border-b">Actions</th>
+                <tr class="bg-gray-200 text-gray-700 text-left">
+                    <th class="w-1/4 py-2 px-4 border-b">Title</th>
+                    <th class="w-1/4 py-2 px-4 border-b">Subject</th>
+                    <th class="w-1/4 py-2 px-4 border-b">Exam Date</th>
+                    <th class="w-1/4 py-2 px-4 border-b">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,9 +42,14 @@
                         <td class="py-2 px-4 border-b">{{ $exam->title }}</td>
                         <td class="py-2 px-4 border-b">{{ $exam->subject }}</td>
                         <td class="py-2 px-4 border-b">
-                            {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y H:i') }}</td>
-                        <td class="py-2 px-4 border-b">{{ $exam->eligible_roles }}</td>
-                        <td class="py-2 px-4 border-b">
+                            {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y H:i') }}
+                        </td>
+                        <td class="py-2 px-4 border-b flex gap-2">
+                            <a href="{{ route('exams.edit', $exam->id) }}"
+                                class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
+                                Edit
+                            </a>
+
                             <form action="{{ route('exams.destroy', $exam->id) }}" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this exam?');">
                                 @csrf
@@ -57,10 +59,11 @@
                                 </button>
                             </form>
                         </td>
+
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="py-4 text-center text-gray-500">No exams found.</td>
+                        <td colspan="4" class="py-4 text-center text-gray-500">No exams found.</td>
                     </tr>
                 @endforelse
             </tbody>

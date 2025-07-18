@@ -22,4 +22,15 @@ class Exam extends Model
     {
         return $query->where('exam_date', '>', now())->orderBy('exam_date');
     }
+
+    public function definition(): array
+    {
+        return [
+            'title' => $this->faker->sentence(3),
+            'subject' => $this->faker->word,
+            'exam_date' => now()->addDays(rand(1, 30)),
+            'eligible_roles' => 'student',
+        ];
+    }
+
 }

@@ -83,3 +83,12 @@ Route::get('/dashboard/upload-results', function () {
 })->middleware('auth')->name('results.upload');
 Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->middleware('auth')->name('dashboard');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/manage/exams/{exam}/edit', [ExamController::class, 'edit'])
+        ->middleware('can:update,exam')
+        ->name('exams.edit');
+
+    Route::put('/manage/exams/{exam}', [ExamController::class, 'update'])
+        ->middleware('can:update,exam')
+        ->name('exams.update');
+});
