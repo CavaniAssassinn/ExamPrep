@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamController;
 
 
 Route::get('/', function () {
@@ -47,7 +48,7 @@ Route::delete('/delete-post/{post}', [PostController::class, 'deletePost']);
 Route::middleware('auth')->group(
     function () {
         Route::get('/profile', [UserController::class, 'showProfile'])->middleware('auth');
-        Route::post('/profile', [UserController::class, 'showProfile']);
+        
     }
 );
 
