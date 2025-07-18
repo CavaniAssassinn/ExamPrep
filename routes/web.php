@@ -4,12 +4,14 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/',function(){
+
+Route::get('/', function () {
     return view('home');
 });
 
-Route::post('/register',[UserController::class,'register']);
+Route::post('/register', [UserController::class, 'register']);
 
 
 
@@ -31,8 +33,16 @@ Route::get('/edit-post/{post}', [PostController::class, 'showEditScreen']);
 Route::put('/edit-post/{post}', [PostController::class, 'actuallyUpdatePost']);
 Route::delete('/delete-post/{post}', [PostController::class, 'deletePost']);
 
-Route::middleware('auth')->group(function(){
-    Route::get('/profile',[UserController::class,'showProfile'])->middleware('auth');
-    Route::post('/profile',[UserController::class,'showProfile']);
-}
+Route::middleware('auth')->group(
+    function () {
+        Route::get('/profile', [UserController::class, 'showProfile'])->middleware('auth');
+        Route::post('/profile', [UserController::class, 'showProfile']);
+    }
 );
+
+//dashboard
+Route::get('/dashboard', [DashboardController::class, 'showDashboard']);
+Route::get('/exams/upcoming', [DashboardController::class, 'upcomingExams']);
+Route::get('/results', [DashboardController::class, 'results']);
+
+

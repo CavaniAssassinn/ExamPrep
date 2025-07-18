@@ -42,7 +42,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
     }
 
@@ -50,4 +49,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class, 'user_id');
     }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
+
 }
