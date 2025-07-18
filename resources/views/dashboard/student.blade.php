@@ -16,14 +16,19 @@
                 <nav class="space-y-2">
                     <a href="#"
                         class="block px-6 py-2 bg-yellow-100 text-yellow-800 rounded-r-full font-medium">Dashboard</a>
-                    <a href="#" class="block px-6 py-2 hover:bg-gray-100">My Tasks</a>
-                    <a href="#" class="block px-6 py-2 hover:bg-gray-100">Notifications</a>
+                    <a href="{{ route('exams.upcoming') }}" class="block px-6 py-2 hover:bg-gray-100">📘 Exams</a>
+                    <a href="{{ route('results') }}" class="block px-6 py-2 hover:bg-gray-100">📊 Results</a>
                 </nav>
             </div>
-            <div class="p-6 border-t">
+            <div class="p-6 border-t space-y-2">
+                <a href="/profile" class="block bg-blue-500 hover:bg-blue-600 text-white text-center px-4 py-2 rounded">
+                    👤 Profile
+                </a>
                 <form method="POST" action="/logout">
                     @csrf
-                    <button class="text-sm text-red-600 hover:underline">Logout</button>
+                    <button class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                        🚪 Logout
+                    </button>
                 </form>
             </div>
         </aside>
@@ -40,35 +45,87 @@
                     @endauth
                 </div>
                 <div class="space-x-3">
-                    @if (auth()->user()->profile_photo)
-                        <a href="/profile" class="block">
-                            <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="Profile"
-                                class="w-10 h-10 rounded-full border-2 border-yellow-400 hover:scale-105 transition">
-                        </a>
-                    @else
-                        <a href="/profile" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                            Profile
-                        </a>
-                    @endif
-
                     @if (auth()->user()->user_role === 'lecturer')
                         <a href="/exams/create"
                             class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded inline-block">
                             + New Exam
                         </a>
                     @endif
-
                 </div>
             </div>
 
             <!-- Grid Layout -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Calendar -->
+                <script>
+                    const upcomingExams = @json(
+                        $upcomingExams->pluck('exam_date')->map(function ($date) {
+                            return \Carbon\Carbon::parse($date)->format('Y-m-d');
+                        }));
+                </script>
+
+                <!-- Calendar -->
                 <div class="bg-white rounded-xl p-5 shadow-sm">
                     <h2 class="text-lg font-semibold mb-3">📅 Calendar</h2>
-                    <p class="text-sm text-gray-500">March 2022 (Static)</p>
-                    <div class="mt-2 text-sm text-gray-600">Use a calendar component here</div>
+                    <div id="calendar" class="grid grid-cols-7 gap-1 text-center text-sm">
+                        <div class="font-bold text-gray-700">Sun</div>
+                        <div class="font-bold text-gray-700">Mon</div>
+                        <div class="font-bold text-gray-700">Tue</div>
+                        <div class="font-bold text-gray-700">Wed</div>
+                        <div class="font-bold text-gray-700">Thu</div>
+                        <div class="font-bold text-gray-700">Fri</div>
+                        <div class="font-bold text-gray-700">Sat</div>
+                        <!-- Dates will be populated here -->
+                    </div>
                 </div>
+
+                <script>
+                    const calendarEl = document.getElementById('calendar');
+
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = now.getMonth(); // 0-indexed
+                    const today = now.getDate();
+
+                    const firstDayOfMonth = new Date(year, month, 1).getDay(); // Sunday = 0
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                    // Convert to set for quick lookup
+                    const examDates = new Set(upcomingExams.filter(dateStr => {
+                        const d = new Date(dateStr);
+                        return d.getFullYear() === year && d.getMonth() === month;
+                    }).map(dateStr => new Date(dateStr).getDate()));
+
+                    // Fill blank days
+                    for (let i = 0; i < firstDayOfMonth; i++) {
+                        const empty = document.createElement('div');
+                        calendarEl.appendChild(empty);
+                    }
+
+                    // Fill actual days
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const dayEl = document.createElement('div');
+                        dayEl.textContent = day;
+                        dayEl.classList.add('py-1', 'rounded', 'cursor-default', 'transition');
+
+                        const isToday = day === today;
+                        const isExam = examDates.has(day);
+
+                        if (isToday && isExam) {
+                            dayEl.classList.add('bg-purple-500', 'text-white', 'font-bold');
+                        } else if (isToday) {
+                            dayEl.classList.add('bg-yellow-400', 'text-white', 'font-bold');
+                        } else if (isExam) {
+                            dayEl.classList.add('bg-blue-500', 'text-white', 'font-semibold');
+                        } else {
+                            dayEl.classList.add('hover:bg-gray-100');
+                        }
+
+                        calendarEl.appendChild(dayEl);
+                    }
+                </script>
+
+
 
                 <!-- Upcoming Exams -->
                 <div class="bg-white rounded-xl p-5 shadow-sm">
