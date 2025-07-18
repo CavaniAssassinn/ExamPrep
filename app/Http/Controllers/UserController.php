@@ -62,12 +62,18 @@ class UserController extends Controller
         $user = Auth::user();
         return view('profile', compact('user'));
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     public function showLoginForm()
     {
         return view('auth.login');
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -98,4 +104,5 @@ class UserController extends Controller
 
         return redirect('/profile')->with('success', 'Your profile has been updated successfully');
     }
+
 }

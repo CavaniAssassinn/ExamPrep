@@ -35,6 +35,7 @@ class ExamController extends Controller
         return redirect('/dashboard')->with('success', 'Exam was created.');
     }
 
+<<<<<<< Updated upstream
     public function index()
     {
         $exams = \App\Models\Exam::all();
@@ -49,4 +50,6 @@ class ExamController extends Controller
         return redirect()->back()->with('success', 'Exam deleted successfully.');
     }
 
+=======
+>>>>>>> Stashed changes
 }
